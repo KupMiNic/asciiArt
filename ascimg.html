@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ascii-Art</title>
+    <link rel="stylesheet" href="asc.css">
+</head>
+
+<body onload="preparation();">
+    <div class="container">
+        <canvas id="canvas" width="400" height="300"></canvas>
+
+        <input type='file' onchange="readURL(this);" class="wbita" />
+
+        <div class="embeded">
+            <img id="blah" src="#" alt="your image" />
+            <p>Click loaded image to start rendering</p>
+        </div>
+    </div>
+    
+    <div class="loader">
+        <img src="loader.gif" width='10%'>
+        <p>LOADING... (or rendering)</p>
+    </div>
+    <code class="tutorial">
+        Step1: Upload your image<br>
+        Step2: Optionally adjust settings below<br>
+        Step3: When image loaded, click it<br>
+        Step4: <code class="red">!Wait!</code> and enjoy<br>
+    </code>
+
+    <div class='personalization'>
+        <div class="scaleSet">
+            <p>Change scale:</p>
+            <button class='przycisk'>2</button>
+            <button class='przycisk'>4</button>
+            <button class='przycisk'>6</button>
+            <button class='przycisk'>8</button>
+            <button class='przycisk'>10</button>
+        </div>
+        <div class="timers">
+            <p class="monitorCont">Scale:<p class="actualScl">10</p></p>
+            <p class="renderTime">Render time: <p class="timer">1sec</p></p>
+        </div>
+        <div class="colorSet">
+            <!-- button class='matrixBtn'>Matrix-Green</button>
+                <button class='whiteBtn'>White</button> -->
+                <div class="inher">
+                <p>Change Ascii color:</p>
+                <input type="color" class="colorPicker">
+            </div>
+            <p class="actualColor"></p>
+        </div>
+    </div>
+
+    <pre>
+    </pre>
+
+    <script>
+        function preparation() {
+            //PERSONALIZATION BUTTONS MECHANISM
+            const picker = document.querySelector('.colorPicker');
+            //const loader = document.querySelector('.loader');
+            const capturedColor = document.querySelector('.actualColor');
+            const skalaBtn = document.querySelectorAll('.przycisk');
+            const ascii = document.querySelector("pre");
+            const actualScl = document.querySelector('.actualScl');
+            const timer = document.querySelector('.timer');
+
+            function picked() {
+                capturedColor.textContent=this.value;
+                capturedColor.style.color = `${this.value}`
+                ascii.style.color = `${this.value}`
+
+            }
+
+            picker.addEventListener('input', picked);
+
+            let scale = 10;
+
+            function skalowanie() {
+                scale = parseInt(this.innerHTML);
+                switch (scale){
+                    case 2:
+                        timer.innerText = '40sec';
+                        break;
+                    case 4:
+                        timer.innerText = '5sec';
+                        break;
+                    default:
+                        timer.innerText = '1sec';
+                        break;
+                }
+                actualScl.innerHTML=parseInt(this.innerHTML);
+            }
+
+            skalaBtn.forEach(btnn => btnn.addEventListener("click", skalowanie));
+
+
+            //ASCII RENDERING MECHANISM
+            const skala = document.querySelector(".skala")
+            const canvas = document.querySelector("canvas");
+            const ctx = canvas.getContext("2d");
+            const input = document.querySelector('input');
+            const img = document.querySelector("img");
+            const przycisk = document.querySelector('.przycisk');
+            ctx.width = 500;
+            let ascii_table = ['.', ',', '-', '~', ':', ';', '=', '!', '*', '#', '$', '@']
+            ascii.innerHTML = '';
+
+            function render(){
+                
+            }
+
+            img.addEventListener('click', () => {
+                //loader.style.display ="flex";
+                ascii.innerHTML = '';
+                console.log('sztynks');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+                for (let i = 0; i < 300; i += scale) {
+                    for (let j = 0; j < 400; j += scale) {
+                        let prototyp = ctx.getImageData(j, i, scale, scale);
+                        let index = Math.round(prototyp.data[0] / 23)
+                        ascii.innerHTML += ' ' + ascii_table[index];
+                    }
+                    ascii.innerHTML += '<br>';
+                }
+                //loader.style.display ="none";
+            })
+
+
+        }
+    </script>
+
+
+
+<!-- CLIENTS IMAGE STUFF -->
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#blah')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(200);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+
+</html>
